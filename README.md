@@ -29,7 +29,7 @@ This project is a modern insurance profile dashboard built with React, TypeScrip
 ### Take care of your React app styles..
 
 * Take a look at the **[globalStyles.ts](src/styles/globalStyles.ts)**. Adding the following rule will protect the app from the DX styles.
-
+* Remember to add the 'index.css' class and then import it in index.tsx import './index.css';
 ```css
 * {
     box-sizing: content-box;
