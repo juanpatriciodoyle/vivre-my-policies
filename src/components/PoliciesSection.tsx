@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 import React, {useMemo} from 'react';
 import {appTexts} from '../constants/text';
 import Text from './Text';
@@ -122,6 +122,7 @@ const UpsellCard = styled.a`
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
     text-align: center;
     text-decoration: none;
     color: inherit;
@@ -132,6 +133,12 @@ const UpsellCard = styled.a`
         box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
         border-color: ${({theme}) => theme.colors.primary};
     }
+`;
+
+const UpsellContent = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 `;
 
 const UpsellIconWrapper = styled.div`
@@ -156,8 +163,18 @@ const StyledPetIcon = styled(PetIcon)`
     color: #4f9a7c;
 `;
 
+const heartbeat = keyframes`
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+`;
+
 const StyledLifeIcon = styled(LifeIcon)`
     color: #4f9a7c;
+    animation: ${heartbeat} 1.5s ease-in-out infinite;
 `;
 
 const StyledHouseIcon = styled(HouseIcon)`
@@ -344,11 +361,13 @@ export const PoliciesSection = ({onViewDetails, product}: PoliciesSectionProps) 
                     />
                 ))}
                 <UpsellCard href="/products/life-insurance">
-                    <UpsellIconWrapper>
-                        <StyledLifeIcon/>
-                    </UpsellIconWrapper>
-                    <Text as="h3" $variant="h3" style={{marginBottom: 8}}>{appTexts.lifeUpsellTitle}</Text>
-                    <Text $variant="body">{appTexts.lifeUpsellBody}</Text>
+                    <UpsellContent>
+                        <UpsellIconWrapper>
+                            <StyledLifeIcon/>
+                        </UpsellIconWrapper>
+                        <Text as="h3" $variant="h3" style={{marginBottom: 8}}>{appTexts.lifeUpsellTitle}</Text>
+                        <Text $variant="body">{appTexts.lifeUpsellBody}</Text>
+                    </UpsellContent>
                     <FullWidthButton>{appTexts.getQuoteButton}</FullWidthButton>
                 </UpsellCard>
             </CardsGrid>
