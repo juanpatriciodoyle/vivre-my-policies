@@ -4,10 +4,12 @@ import {ActiveCoverageHeader} from './components/ActiveCoverageHeader';
 import {PoliciesSection, PolicyData} from './components/PoliciesSection';
 import {ToolsSupportSection} from './components/ToolsSupportSection';
 import {DetailsSidePanel} from './components/DetailsSidePanel';
+import {useSettings} from './utils/dx/settingsContext';
 
 function App() {
     const [isPanelOpen, setPanelOpen] = useState(false);
     const [selectedPolicy, setSelectedPolicy] = useState<PolicyData | null>(null);
+    const {settings} = useSettings();
 
     const handleViewDetails = (policy: PolicyData) => {
         setSelectedPolicy(policy);
@@ -18,11 +20,17 @@ function App() {
         setPanelOpen(false);
     };
 
+    const isLocalhost = Boolean(
+        window.location.hostname === 'localhost' ||
+        window.location.hostname === '[::1]' ||
+        window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
+    );
+
     return (
         <>
             <HubContainer>
-                <ActiveCoverageHeader/>
-                <PoliciesSection onViewDetails={handleViewDetails}/>
+                <ActiveCoverageHeader isLocalhost={isLocalhost}/>
+                <PoliciesSection onViewDetails={handleViewDetails} product={settings.product}/>
                 <ToolsSupportSection/>
             </HubContainer>
             <DetailsSidePanel

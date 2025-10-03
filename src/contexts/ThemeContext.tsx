@@ -1,37 +1,38 @@
-import React, {createContext, ReactNode, useMemo, useState} from 'react';
+import React, {createContext, ReactNode, useMemo} from 'react';
 import {ThemeProvider} from 'styled-components';
 import {themes, ThemeType} from '../styles/theme';
-
-type ThemeMode = 'light' | 'dark';
+import {useSettings} from '../utils/dx/settingsContext';
+import {Theme} from '../utils/dx/types';
 
 interface ThemeContextType {
-    mode: ThemeMode;
+    mode: Theme;
     toggleTheme: () => void;
     theme: ThemeType;
 }
 
-export const ThemeContext = createContext<ThemeContextType>({
-    mode: 'light',
-    toggleTheme: () => {
-    },
-    theme: themes.light,
-});
+export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 interface CustomThemeProviderProps {
     children: ReactNode;
 }
 
 export const CustomThemeProvider = ({children}: CustomThemeProviderProps) => {
-    const [themeMode, setThemeMode] = useState<ThemeMode>('light');
+    const {settings, setSettings} = useSettings();
+    const themeMode: Theme = settings.theme;
+    const theme: ThemeType = useMemo(() => themes[themeMode], [themeMode]);
 
     const toggleTheme = () => {
-        setThemeMode(prevMode => (prevMode === 'light' ? 'dark' : 'light'));
+        setSettings({theme: themeMode === 'light' ? 'dark' : 'light'});
     };
 
-    const theme = useMemo(() => themes[themeMode], [themeMode]);
+    const contextValue = useMemo(() => ({
+        mode: themeMode,
+        toggleTheme,
+        theme,
+    }), [themeMode, theme, setSettings]);
 
     return (
-        <ThemeContext.Provider value={{mode: themeMode, toggleTheme, theme}}>
+        <ThemeContext.Provider value={contextValue}>
             <ThemeProvider theme={theme}>{children}</ThemeProvider>
         </ThemeContext.Provider>
     );

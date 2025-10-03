@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React from 'react';
+import React, {useMemo} from 'react';
 import {appTexts} from '../constants/text';
 import Text from './Text';
 import {PolicyCard, PolicyStatus} from './PolicyCard';
@@ -8,6 +8,8 @@ import {HealthIcon} from './icons/HealthIcon';
 import {PetIcon} from './icons/PetIcon';
 import {LifeIcon} from './icons/LifeIcon';
 import {PrimaryButton} from './Button';
+import {HouseIcon} from '../components/icons/HouseIcon';
+import {Product} from '../utils/dx/types';
 
 interface Coverage {
     label: string;
@@ -101,7 +103,7 @@ const CardsGrid = styled.div`
 
 const UpsellCard = styled.a`
     box-sizing: border-box;
-    background-color: #FFFFFF;
+    background-color: ${({theme}) => theme.colors.subtleBackground};
     padding: 24px;
     border-radius: ${({theme}) => theme.sizing.borderRadius.cards};
     border: 1px dashed ${({theme}) => theme.colors.borders};
@@ -146,9 +148,12 @@ const StyledLifeIcon = styled(LifeIcon)`
     color: #4f9a7c;
 `;
 
+const StyledHouseIcon = styled(HouseIcon)`
+    color: #4f9a7c;
+`;
 
-const policiesData: PolicyData[] = [
-    {
+const allPolicies: { [key: string]: PolicyData } = {
+    auto: {
         icon: <StyledCarIcon/>,
         title: appTexts.autoPolicyTitle,
         identifier: 'Ford S-Max',
@@ -192,7 +197,7 @@ const policiesData: PolicyData[] = [
             address: '10 Downing Street, London, SW1A 2AA, United Kingdom',
         },
     },
-    {
+    health: {
         icon: <StyledHealthIcon/>,
         title: appTexts.healthPolicyTitle,
         identifier: 'Kate Crestwell',
@@ -223,7 +228,7 @@ const policiesData: PolicyData[] = [
         billingInfo: {nextPayment: {amount: '', dueDate: '', paymentMethod: ''}, paymentHistory: []},
         documents: [],
     },
-    {
+    pet: {
         icon: <StyledPetIcon/>,
         title: appTexts.petPolicyTitle,
         identifier: 'Buddy (Golden Retriever)',
@@ -246,20 +251,43 @@ const policiesData: PolicyData[] = [
         ],
         billingInfo: {nextPayment: {amount: '', dueDate: '', paymentMethod: ''}, paymentHistory: []},
     },
-];
+    home: {
+        icon: <StyledHouseIcon/>,
+        title: appTexts.homePolicyTitle,
+        identifier: appTexts.policyIdentifierHome,
+        policyNumber: 'VIV-2938475',
+        status: 'active',
+        coverages: [
+            {label: 'Dwelling Coverage', value: '$450,000', percentage: 85},
+            {label: 'Personal Property', value: '$225,000', percentage: 60},
+            {label: 'Liability Coverage', value: '$500,000', percentage: 100},
+        ],
+        detailedCoverages: [],
+        billingInfo: {nextPayment: {amount: '', dueDate: '', paymentMethod: ''}, paymentHistory: []},
+        documents: [],
+    }
+}
 
 interface PoliciesSectionProps {
     onViewDetails: (policy: PolicyData) => void;
+    product: Product;
 }
 
-export const PoliciesSection = ({onViewDetails}: PoliciesSectionProps) => {
+export const PoliciesSection = ({onViewDetails, product}: PoliciesSectionProps) => {
+    const policiesToDisplay = useMemo(() => {
+        if (product === 'Health') {
+            return [allPolicies.health, allPolicies.home, allPolicies.pet];
+        }
+        return [allPolicies.auto, allPolicies.health, allPolicies.pet];
+    }, [product]);
+
     return (
         <SectionContainer>
             <SectionTitle as="h2" $variant="h2">
                 {appTexts.policiesSectionTitle}
             </SectionTitle>
             <CardsGrid>
-                {policiesData.map((policy) => (
+                {policiesToDisplay.map((policy) => (
                     <PolicyCard
                         key={policy.policyNumber}
                         policy={policy}

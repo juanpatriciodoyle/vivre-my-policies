@@ -68,8 +68,12 @@ const StatusBadge = styled.div<StatusBadgeProps>`
     align-items: center;
     gap: 6px;
     padding: 4px 10px;
-    border-radius: 999px;
+    border-radius: ${({theme}) => theme.sizing.borderRadius.cards};
     ${({$status}) => statusStyles[$status]};
+`;
+
+const StyledText = styled(Text)`
+    color: ${({theme}) => theme.colors.primary};
 `;
 
 const CardBody = styled.div`
@@ -131,9 +135,9 @@ export const PolicyCard = ({policy, onViewDetails}: PolicyCardProps) => {
                     <Text as="h3" $variant="h3">{title}</Text>
                 </PolicyInfo>
                 <StatusBadge $status={status}>
-                    <Text as="span" $variant="caption" style={{fontWeight: 500}}>
+                    <StyledText as="span" $variant="caption" style={{fontWeight: 500}}>
                         {statusTextMap[status]}
-                    </Text>
+                    </StyledText>
                 </StatusBadge>
             </CardHeader>
 
