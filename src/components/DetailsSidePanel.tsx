@@ -198,6 +198,18 @@ export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
     }
 
     useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen]);
+
+    useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'Escape') {
                 onClose();
@@ -262,8 +274,7 @@ export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
                                 <ContentListItem key={cov.label}>
                                     <Text $variant="body">{cov.label}</Text>
                                     <DottedLine/>
-                                    <Text $variant="body"
-                                          style={{fontWeight: 500}}>{formatCurrency(cov.value)}</Text>
+                                    <Text $variant="body" style={{fontWeight: 500}}>{formatCurrency(cov.value)}</Text>
                                 </ContentListItem>
                             ))}
                         </ContentList>
