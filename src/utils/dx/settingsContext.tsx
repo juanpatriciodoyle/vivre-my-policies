@@ -10,6 +10,7 @@ interface SettingsContextType {
 const defaultSettings: Settings = {
     product: settingsConfig.product.defaultValue,
     theme: settingsConfig.theme.defaultValue,
+    currency: settingsConfig.currency.defaultValue,
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -21,7 +22,7 @@ const getInitialSettings = (): Settings => {
         const initialSettings: { [key: string]: any } = {...defaultSettings};
 
         (Object.keys(savedSettings) as Array<keyof Settings>).forEach(key => {
-            const config = settingsConfig[key];
+            const config = settingsConfig[key as keyof Settings];
             const savedValue = savedSettings[key];
 
             if (config && savedValue) {

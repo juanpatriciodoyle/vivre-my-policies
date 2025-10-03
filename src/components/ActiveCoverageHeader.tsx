@@ -59,12 +59,25 @@ const PaymentCtaContainer = styled.div`
     gap: 10px;
 `;
 
-interface  ActiveCoverageHeaderProps{
+interface ActiveCoverageHeaderProps {
     isLocalhost: boolean;
+    nextPaymentAmount: number;
+    nextPaymentDate: string;
+    currencySymbol: string;
 }
 
-export const ActiveCoverageHeader = ({isLocalhost}: ActiveCoverageHeaderProps) => {
+export const ActiveCoverageHeader = ({
+                                         isLocalhost,
+                                         nextPaymentAmount,
+                                         nextPaymentDate,
+                                         currencySymbol
+                                     }: ActiveCoverageHeaderProps) => {
     const [isModalOpen, setModalOpen] = useState(false);
+
+    const paymentLabel = appTexts.nextPaymentLabel
+        .replace('{currency}', currencySymbol)
+        .replace('{amount}', nextPaymentAmount.toFixed(2))
+        .replace('{date}', nextPaymentDate);
 
     return (
         <HeaderContainer>
@@ -88,7 +101,7 @@ export const ActiveCoverageHeader = ({isLocalhost}: ActiveCoverageHeaderProps) =
             </SupportingText>
             <PaymentCtaContainer>
                 <PrimaryButton>{appTexts.makePaymentButton}</PrimaryButton>
-                <Text $variant="caption">{appTexts.nextPaymentLabel}</Text>
+                <Text $variant="caption">{paymentLabel}</Text>
             </PaymentCtaContainer>
         </HeaderContainer>
     );

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Product, Settings, Theme} from './types';
+import {Currency, Product, Settings, Theme} from './types';
 import {settingsConfigArray} from './settingsConfig';
 
 const Select = styled.select`
@@ -17,31 +17,36 @@ const Select = styled.select`
 
 interface FormGroupRenderProps {
     currentSelection: Settings;
-    handleSettingChange: (key: keyof Settings, value: Product | Theme) => void;
+    handleSettingChange: (key: keyof Settings, value: Product | Theme | Currency) => void;
 }
 
 export const getFormGroups = ({currentSelection, handleSettingChange}: FormGroupRenderProps) => {
     return settingsConfigArray.map(setting => {
         const {key, label, options, component: CustomComponent} = setting;
 
-        const componentToRender = CustomComponent ? (
-            <CustomComponent
-                setTheme={(theme: Theme) => handleSettingChange('theme', theme)}
-                currentThemeKey={currentSelection.theme}
-            />
-        ) : (
-            <Select
-                name={key}
-                value={currentSelection[key]}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                    handleSettingChange(key, e.target.value as Product | Theme)
-                }
-            >
-                {options.map(option => (
-                    <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-            </Select>
-        );
+        let componentToRender;
+
+        if (CustomComponent) {
+            const props = {
+                [`set${key.charAt(0).toUpperCase() + key.slice(1)}`]: (value: Theme | Currency) => handleSettingChange(key, value),
+                [`current${key.charAt(0).toUpperCase() + key.slice(1)}Key`]: currentSelection[key],
+            };
+            componentToRender = <CustomComponent {...props} />;
+        } else {
+            componentToRender = (
+                <Select
+                    name={key}
+                    value={currentSelection[key]}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                        handleSettingChange(key, e.target.value as Product | Theme | Currency)
+                    }
+                >
+                    {options.map(option => (
+                        <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
+                </Select>
+            );
+        }
 
         return {
             id: key,

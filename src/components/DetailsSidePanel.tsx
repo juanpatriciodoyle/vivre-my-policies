@@ -6,6 +6,9 @@ import {appTexts} from '../constants/text';
 import {CloseIcon} from './icons/CloseIcon';
 import {PrimaryButton, SecondaryButton} from './Button';
 import {DocumentIcon} from './icons/DocumentIcon';
+import {useSettings} from "../utils/dx/settingsContext";
+import {CURRENCY_SYMBOLS} from "../utils/dx/dx-data";
+import {formatDate} from "../utils/dateUtils";
 
 type Tab = 'coverage' | 'billing' | 'vehicle' | 'member' | 'claims' | 'status' | 'documents' | 'property';
 
@@ -185,6 +188,14 @@ const StatusStep = styled.li<{ $status: 'completed' | 'inProgress' | 'pending' }
 
 export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
     const [activeTab, setActiveTab] = useState<Tab>('coverage');
+    const {settings} = useSettings();
+    const currencySymbol = CURRENCY_SYMBOLS[settings.currency];
+
+    const formatCurrency = (value: string | number) => {
+        const num = Number(value);
+        if (isNaN(num)) return value;
+        return `${currencySymbol}${num.toLocaleString('en-GB')}`;
+    }
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -251,7 +262,8 @@ export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
                                 <ContentListItem key={cov.label}>
                                     <Text $variant="body">{cov.label}</Text>
                                     <DottedLine/>
-                                    <Text $variant="body" style={{fontWeight: 500}}>{cov.value}</Text>
+                                    <Text $variant="body"
+                                          style={{fontWeight: 500}}>{formatCurrency(cov.value)}</Text>
                                 </ContentListItem>
                             ))}
                         </ContentList>
@@ -267,13 +279,13 @@ export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
                                     <Text $variant="body">{appTexts.paymentAmount}</Text>
                                     <DottedLine/>
                                     <Text $variant="body"
-                                          style={{fontWeight: 500}}>{policy.billingInfo.nextPayment.amount}</Text>
+                                          style={{fontWeight: 500}}>{currencySymbol}{policy.billingInfo.nextPayment.amount.toFixed(2)}</Text>
                                 </ContentListItem>
                                 <ContentListItem>
                                     <Text $variant="body">{appTexts.paymentDueDate}</Text>
                                     <DottedLine/>
                                     <Text $variant="body"
-                                          style={{fontWeight: 500}}>{policy.billingInfo.nextPayment.dueDate}</Text>
+                                          style={{fontWeight: 500}}>{formatDate(policy.billingInfo.nextPayment.dueDate)}</Text>
                                 </ContentListItem>
                                 <ContentListItem>
                                     <Text $variant="body">{appTexts.paymentMethod}</Text>
@@ -288,9 +300,10 @@ export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
                             <ContentList>
                                 {policy.billingInfo.paymentHistory.map((item, index) => (
                                     <ContentListItem key={index}>
-                                        <Text $variant="body">{item.date}</Text>
+                                        <Text $variant="body">{formatDate(item.date)}</Text>
                                         <DottedLine/>
-                                        <Text $variant="body" style={{fontWeight: 500}}>{item.amount}</Text>
+                                        <Text $variant="body"
+                                              style={{fontWeight: 500}}>{currencySymbol}{item.amount.toFixed(2)}</Text>
                                     </ContentListItem>
                                 ))}
                             </ContentList>
@@ -303,7 +316,7 @@ export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
                                         <DocumentIcon/>
                                         <div>
                                             <Text $variant="body" style={{fontWeight: 500}}>{doc.name}</Text>
-                                            <Text $variant="caption">{doc.date}</Text>
+                                            <Text $variant="caption">{formatDate(doc.date)}</Text>
                                         </div>
                                     </DocumentItem>
                                 ))}
@@ -430,9 +443,10 @@ export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
                                 <ContentListItem key={index}>
                                     <div>
                                         <Text $variant="body" style={{fontWeight: 500}}>{claim.service}</Text>
-                                        <Text $variant="caption">{claim.date}</Text>
+                                        <Text $variant="caption">{formatDate(claim.date)}</Text>
                                     </div>
-                                    <Text $variant="body" style={{fontWeight: 500}}>{claim.amount}</Text>
+                                    <Text $variant="body"
+                                          style={{fontWeight: 500}}>{currencySymbol}{claim.amount.toFixed(2)}</Text>
                                 </ContentListItem>
                             ))}
                         </ContentList>
@@ -460,7 +474,7 @@ export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
                                     <DocumentIcon/>
                                     <div>
                                         <Text $variant="body" style={{fontWeight: 500}}>{doc.name}</Text>
-                                        <Text $variant="caption">{doc.date}</Text>
+                                        <Text $variant="caption">{formatDate(doc.date)}</Text>
                                     </div>
                                 </DocumentItem>
                             ))}

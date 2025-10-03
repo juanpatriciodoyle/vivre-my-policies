@@ -8,8 +8,9 @@ import {HealthIcon} from './icons/HealthIcon';
 import {PetIcon} from './icons/PetIcon';
 import {LifeIcon} from './icons/LifeIcon';
 import {PrimaryButton} from './Button';
-import {HouseIcon} from '../components/icons/HouseIcon';
+import {HouseIcon} from './icons/HouseIcon';
 import {Product} from '../utils/dx/types';
+import {getRelativeDate} from '../utils/dateUtils';
 
 interface Coverage {
     label: string;
@@ -23,14 +24,14 @@ interface DetailedCoverage {
 }
 
 interface Payment {
-    date: string;
-    amount: string;
+    date: Date;
+    amount: number;
     status: string;
 }
 
 interface Document {
     name: string;
-    date: string;
+    date: Date;
 }
 
 export interface PolicyData {
@@ -43,8 +44,8 @@ export interface PolicyData {
     detailedCoverages: DetailedCoverage[];
     billingInfo: {
         nextPayment: {
-            amount: string;
-            dueDate: string;
+            amount: number;
+            dueDate: Date;
             paymentMethod: string;
         };
         paymentHistory: Payment[];
@@ -72,9 +73,9 @@ export interface PolicyData {
         pcp: string;
     };
     claimsHistory?: {
-        date: string;
+        date: Date;
         service: string;
-        amount: string;
+        amount: number;
         status: string;
     }[];
     applicationStatus?: {
@@ -110,7 +111,7 @@ const CardsGrid = styled.div`
 
 const UpsellCard = styled.a`
     box-sizing: border-box;
-    background-color: ${({theme}) => theme.colors.subtleBackground};
+    background-color: #FFFFFF;
     padding: 24px;
     border-radius: ${({theme}) => theme.sizing.borderRadius.cards};
     border: 1px dashed ${({theme}) => theme.colors.borders};
@@ -159,7 +160,7 @@ const StyledHouseIcon = styled(HouseIcon)`
     color: #4f9a7c;
 `;
 
-const allPolicies: { [key: string]: PolicyData } = {
+export const allPolicies: { [key: string]: PolicyData } = {
     auto: {
         icon: <StyledCarIcon/>,
         title: appTexts.autoPolicyTitle,
@@ -172,28 +173,28 @@ const allPolicies: { [key: string]: PolicyData } = {
             {label: appTexts.coverageCollision, value: '£500 Excess', percentage: 50},
         ],
         detailedCoverages: [
-            {label: 'Third-Party Liability', value: '£20,000,000 Limit'},
-            {label: 'Legal Cover', value: '£100,000 Limit'},
+            {label: 'Third-Party Liability', value: '20000000'},
+            {label: 'Legal Cover', value: '100000'},
             {label: 'Comprehensive Cover', value: 'Market Value'},
-            {label: 'Collision Excess', value: '£500'},
-            {label: 'Windscreen Excess', value: '£100'},
+            {label: 'Collision Excess', value: '500'},
+            {label: 'Windscreen Excess', value: '100'},
         ],
         billingInfo: {
             nextPayment: {
-                amount: '£145.50',
-                dueDate: 'October 25, 2025',
+                amount: 145.50,
+                dueDate: getRelativeDate(22),
                 paymentMethod: 'Visa ending in 4242',
             },
             paymentHistory: [
-                {date: 'Sep 25, 2025', amount: '£145.50', status: 'Paid'},
-                {date: 'Aug 25, 2025', amount: '£145.50', status: 'Paid'},
-                {date: 'Jul 25, 2025', amount: '£145.50', status: 'Paid'},
+                {date: getRelativeDate(-8), amount: 145.50, status: 'Paid'},
+                {date: getRelativeDate(-38), amount: 145.50, status: 'Paid'},
+                {date: getRelativeDate(-69), amount: 145.50, status: 'Paid'},
             ],
         },
         documents: [
-            {name: 'Certificate of Motor Insurance.pdf', date: 'Oct 2, 2025'},
-            {name: 'Policy Wording - VIV Auto Plus.pdf', date: 'Oct 2, 2025'},
-            {name: 'No Claims Discount Proof.pdf', date: 'Oct 2, 2025'},
+            {name: 'Certificate of Motor Insurance.pdf', date: getRelativeDate(-1)},
+            {name: 'Policy Wording - VIV Auto Plus.pdf', date: getRelativeDate(-1)},
+            {name: 'No Claims Discount Proof.pdf', date: getRelativeDate(-1)},
         ],
         vehicleInfo: {
             vehicle: 'Ford S-Max',
@@ -218,9 +219,9 @@ const allPolicies: { [key: string]: PolicyData } = {
         detailedCoverages: [
             {label: 'Plan Type', value: 'Vivre Health Plus - Comprehensive'},
             {label: 'Hospital Cover', value: 'Full Cover for Private & NHS Hospitals'},
-            {label: 'Out-patient Limit', value: '£2,000 / year'},
+            {label: 'Out-patient Limit', value: '2000'},
             {label: 'Therapies Cover', value: 'Full Cover (Physio, Osteo)'},
-            {label: 'Annual Excess', value: '£250'},
+            {label: 'Annual Excess', value: '250'},
         ],
         memberInfo: {
             name: 'Kate Crestwell',
@@ -229,10 +230,18 @@ const allPolicies: { [key: string]: PolicyData } = {
             pcp: 'Dr. Eleanor Vance',
         },
         claimsHistory: [
-            {date: 'Aug 12, 2025', service: 'Physiotherapy Session', amount: '£85.00', status: 'Approved & Paid'},
-            {date: 'May 20, 2025', service: 'Specialist Consultation', amount: '£250.00', status: 'Approved & Paid'},
+            {date: getRelativeDate(-52), service: 'Physiotherapy Session', amount: 85.00, status: 'Approved & Paid'},
+            {
+                date: getRelativeDate(-136),
+                service: 'Specialist Consultation',
+                amount: 250.00,
+                status: 'Approved & Paid'
+            },
         ],
-        billingInfo: {nextPayment: {amount: '', dueDate: '', paymentMethod: ''}, paymentHistory: []},
+        billingInfo: {
+            nextPayment: {amount: 95.00, dueDate: getRelativeDate(15), paymentMethod: 'Direct Debit'},
+            paymentHistory: []
+        },
         documents: [],
     },
     pet: {
@@ -245,7 +254,7 @@ const allPolicies: { [key: string]: PolicyData } = {
         detailedCoverages: [],
         applicationStatus: {
             steps: [
-                {name: 'Application Submitted', status: 'completed'},
+                {name: 'Application Submitted (Oct 3, 2025)', status: 'completed'},
                 {name: 'Underwriting Review', status: 'inProgress'},
                 {name: 'Policy Decision', status: 'pending'},
                 {name: 'Policy Active', status: 'pending'},
@@ -253,10 +262,10 @@ const allPolicies: { [key: string]: PolicyData } = {
             note: 'Your application is currently with our underwriting team. This typically takes 3-5 working days. We will notify you by email as soon as there is an update.',
         },
         documents: [
-            {name: 'Buddy - Vet History Report.pdf', date: 'Uploaded Oct 3, 2025'},
-            {name: 'Buddy - Microchip Certificate.pdf', date: 'Uploaded Oct 3, 2025'},
+            {name: 'Buddy - Vet History Report.pdf', date: getRelativeDate(0)},
+            {name: 'Buddy - Microchip Certificate.pdf', date: getRelativeDate(0)},
         ],
-        billingInfo: {nextPayment: {amount: '', dueDate: '', paymentMethod: ''}, paymentHistory: []},
+        billingInfo: {nextPayment: {amount: 0, dueDate: new Date(), paymentMethod: ''}, paymentHistory: []},
     },
     home: {
         icon: <StyledHouseIcon/>,
@@ -270,29 +279,29 @@ const allPolicies: { [key: string]: PolicyData } = {
             {label: 'Personal Belongings', value: '£10,000', percentage: 50},
         ],
         detailedCoverages: [
-            {label: 'Buildings Cover', value: '£2,000,000'},
-            {label: 'Contents Cover', value: '£150,000'},
-            {label: 'Personal Belongings', value: '£10,000'},
+            {label: 'Buildings Cover', value: '2000000'},
+            {label: 'Contents Cover', value: '150000'},
+            {label: 'Personal Belongings', value: '10000'},
             {label: 'Accidental Damage', value: 'Included'},
-            {label: 'Legal Expenses', value: '£100,000 Limit'},
-            {label: 'Standard Excess', value: '£500'},
+            {label: 'Legal Expenses', value: '100000'},
+            {label: 'Standard Excess', value: '500'},
         ],
         billingInfo: {
             nextPayment: {
-                amount: '£65.00',
-                dueDate: 'November 1, 2025',
+                amount: 65.00,
+                dueDate: getRelativeDate(29),
                 paymentMethod: 'Visa ending in 4242',
             },
             paymentHistory: [
-                {date: 'Oct 1, 2025', amount: '£65.00', status: 'Paid'},
-                {date: 'Sep 1, 2025', amount: '£65.00', status: 'Paid'},
-                {date: 'Aug 1, 2025', amount: '£65.00', status: 'Paid'},
+                {date: getRelativeDate(-2), amount: 65.00, status: 'Paid'},
+                {date: getRelativeDate(-32), amount: 65.00, status: 'Paid'},
+                {date: getRelativeDate(-63), amount: 65.00, status: 'Paid'},
             ],
         },
         documents: [
-            {name: 'Home Insurance Policy Schedule.pdf', date: 'Oct 1, 2025'},
-            {name: 'Insurance Product Information Document (IPID).pdf', date: 'Oct 1, 2025'},
-            {name: 'Policy Wording - Vivre Home Plus.pdf', date: 'Oct 1, 2025'},
+            {name: 'Home Insurance Policy Schedule.pdf', date: getRelativeDate(-2)},
+            {name: 'Insurance Product Information Document (IPID).pdf', date: getRelativeDate(-2)},
+            {name: 'Policy Wording - Vivre Home Plus.pdf', date: getRelativeDate(-2)},
         ],
         propertyInfo: {
             address: '10 Downing Street, London, SW1A 2AA, United Kingdom',

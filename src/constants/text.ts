@@ -7,7 +7,7 @@ export const appTexts = {
     toolsSectionTitle: 'Tools & Support',
     coverageHeading: "You're fully covered.",
     coverageSubheading: 'You have 3 active policies with Vivre.',
-    nextPaymentLabel: 'Next payment: $245.50 due Oct 25, 2025',
+    nextPaymentLabel: 'Next payment: {currency}{amount} due {date}',
     makePaymentButton: 'Make a Payment',
     autoPolicyTitle: 'Auto Insurance',
     homePolicyTitle: 'Home Insurance',
