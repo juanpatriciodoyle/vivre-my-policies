@@ -232,9 +232,8 @@ export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
         }
     }, [isOpen, policy]);
 
-    if (!policy) return null;
-
     const getTabsForPolicy = () => {
+        if (!policy) return [];
         switch (policy.title) {
             case appTexts.autoPolicyTitle:
                 return [
@@ -265,6 +264,7 @@ export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
     };
 
     const renderTabContent = () => {
+        if (!policy) return null;
         switch (activeTab) {
             case 'coverage':
                 return (
@@ -501,44 +501,50 @@ export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
         <>
             <Overlay $isOpen={isOpen} onClick={onClose}/>
             <PanelContainer $isOpen={isOpen}>
-                <PanelHeader>
-                    <Text as="h2"
-                          $variant="h2">{`${policy.title}${appTexts.panelTitleSuffix}`}</Text>
-                    <CloseButton onClick={onClose} aria-label="Close details panel">
-                        <CloseIcon/>
-                    </CloseButton>
-                </PanelHeader>
+                {policy && (
+                    <>
+                        <PanelHeader>
+                            <Text as="h2"
+                                  $variant="h2">{`${policy.title}${appTexts.panelTitleSuffix}`}</Text>
+                            <CloseButton onClick={onClose} aria-label="Close details panel">
+                                <CloseIcon/>
+                            </CloseButton>
+                        </PanelHeader>
 
-                <KeyInfoSection>
-                    <Text as="p" $variant="h3" style={{fontWeight: 600}}>{policy.identifier}</Text>
-                    <Text as="p" $variant="caption"
-                          style={{marginTop: 4}}>{`${policy.status === 'warning' ? appTexts.applicationNumberPrefix : appTexts.policyNumberPrefix}${policy.policyNumber}`}</Text>
-                </KeyInfoSection>
+                        <KeyInfoSection>
+                            <Text as="p" $variant="h3" style={{fontWeight: 600}}>{policy.identifier}</Text>
+                            <Text as="p" $variant="caption"
+                                  style={{
+                                      marginTop: 4
+                                  }}>{`${policy.status === 'warning' ? appTexts.applicationNumberPrefix : appTexts.policyNumberPrefix}${policy.policyNumber}`}</Text>
+                        </KeyInfoSection>
 
-                <TabContainer>
-                    {getTabsForPolicy().map(tab => (
-                        <TabButton
-                            key={tab.key}
-                            $isActive={activeTab === tab.key}
-                            onClick={() => setActiveTab(tab.key as Tab)}
-                        >
-                            {tab.label}
-                        </TabButton>
-                    ))}
-                </TabContainer>
+                        <TabContainer>
+                            {getTabsForPolicy().map(tab => (
+                                <TabButton
+                                    key={tab.key}
+                                    $isActive={activeTab === tab.key}
+                                    onClick={() => setActiveTab(tab.key as Tab)}
+                                >
+                                    {tab.label}
+                                </TabButton>
+                            ))}
+                        </TabContainer>
 
-                <PanelContent>{renderTabContent()}</PanelContent>
+                        <PanelContent>{renderTabContent()}</PanelContent>
 
-                <PanelFooter>
-                    {policy.title === appTexts.petPolicyTitle ? (
-                        <PrimaryButton>{appTexts.uploadDocumentsButton}</PrimaryButton>
-                    ) : (
-                        <>
-                            <SecondaryButton>{appTexts.downloadIdCardButton}</SecondaryButton>
-                            <PrimaryButton>{appTexts.makePaymentButton}</PrimaryButton>
-                        </>
-                    )}
-                </PanelFooter>
+                        <PanelFooter>
+                            {policy.title === appTexts.petPolicyTitle ? (
+                                <PrimaryButton>{appTexts.uploadDocumentsButton}</PrimaryButton>
+                            ) : (
+                                <>
+                                    <SecondaryButton>{appTexts.downloadIdCardButton}</SecondaryButton>
+                                    <PrimaryButton>{appTexts.makePaymentButton}</PrimaryButton>
+                                </>
+                            )}
+                        </PanelFooter>
+                    </>
+                )}
             </PanelContainer>
         </>
     );
