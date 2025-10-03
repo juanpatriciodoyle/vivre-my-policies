@@ -4,7 +4,10 @@ import {appTexts} from '../constants/text';
 import Text from './Text';
 import {PolicyCard, PolicyStatus} from './PolicyCard';
 import {CarIcon} from './icons/CarIcon';
-import {HouseIcon} from './icons/HouseIcon';
+import {HealthIcon} from './icons/HealthIcon';
+import {PetIcon} from './icons/PetIcon';
+import {LifeIcon} from './icons/LifeIcon';
+import {PrimaryButton} from './Button';
 
 interface Coverage {
     label: string;
@@ -45,13 +48,32 @@ export interface PolicyData {
         paymentHistory: Payment[];
     };
     documents: Document[];
-    vehicleInfo: {
+    vehicleInfo?: {
         vehicle: string;
         year: string;
         registrationNo: string;
         vin: string;
         primaryDriver: string;
         address: string;
+    };
+    memberInfo?: {
+        name: string;
+        membershipNo: string;
+        dob: string;
+        pcp: string;
+    };
+    claimsHistory?: {
+        date: string;
+        service: string;
+        amount: string;
+        status: string;
+    }[];
+    applicationStatus?: {
+        steps: {
+            name: string;
+            status: 'completed' | 'inProgress' | 'pending';
+        }[],
+        note: string;
     };
 }
 
@@ -77,13 +99,53 @@ const CardsGrid = styled.div`
     }
 `;
 
-const StyledCarIcon = styled(CarIcon)`
-    color: ${({theme}) => theme.colors.primary};
+const UpsellCard = styled.a`
+    box-sizing: border-box;
+    background-color: #FFFFFF;
+    padding: 24px;
+    border-radius: ${({theme}) => theme.sizing.borderRadius.cards};
+    border: 1px dashed ${({theme}) => theme.colors.borders};
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    transition: all 150ms ease;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+        border-color: ${({theme}) => theme.colors.primary};
+    }
 `;
 
-const StyledHouseIcon = styled(HouseIcon)`
+const UpsellIconWrapper = styled.div`
     color: ${({theme}) => theme.colors.primary};
+    margin-bottom: 16px;
 `;
+
+const FullWidthButton = styled(PrimaryButton)`
+    width: 100%;
+    margin-top: 24px;
+`;
+
+const StyledCarIcon = styled(CarIcon)`
+    color: #4f9a7c;
+`;
+
+const StyledHealthIcon = styled(HealthIcon)`
+    color: #4f9a7c;
+`;
+
+const StyledPetIcon = styled(PetIcon)`
+    color: #4f9a7c;
+`;
+
+const StyledLifeIcon = styled(LifeIcon)`
+    color: #4f9a7c;
+`;
+
 
 const policiesData: PolicyData[] = [
     {
@@ -131,20 +193,58 @@ const policiesData: PolicyData[] = [
         },
     },
     {
-        icon: <StyledHouseIcon/>,
-        title: appTexts.homePolicyTitle,
-        identifier: appTexts.policyIdentifierHome,
-        policyNumber: 'VIV-2938475',
-        status: 'warning',
+        icon: <StyledHealthIcon/>,
+        title: appTexts.healthPolicyTitle,
+        identifier: 'Kate Crestwell',
+        policyNumber: 'VIV-HLT-944821',
+        status: 'active',
         coverages: [
-            {label: 'Dwelling Coverage', value: '$450,000', percentage: 85},
-            {label: 'Personal Property', value: '$225,000', percentage: 60},
-            {label: 'Liability Coverage', value: '$500,000', percentage: 100},
+            {label: 'Hospital Cover', value: 'Full Cover', percentage: 100},
+            {label: 'Out-patient Limit', value: '£2,000 / year', percentage: 80},
+            {label: 'Therapies Cover', value: 'Full Cover', percentage: 100},
         ],
-        detailedCoverages: [],
+        detailedCoverages: [
+            {label: 'Plan Type', value: 'Vivre Health Plus - Comprehensive'},
+            {label: 'Hospital Cover', value: 'Full Cover for Private & NHS Hospitals'},
+            {label: 'Out-patient Limit', value: '£2,000 / year'},
+            {label: 'Therapies Cover', value: 'Full Cover (Physio, Osteo)'},
+            {label: 'Annual Excess', value: '£250'},
+        ],
+        memberInfo: {
+            name: 'Kate Crestwell',
+            membershipNo: 'VIV-944821-01',
+            dob: 'August 15, 1988',
+            pcp: 'Dr. Eleanor Vance',
+        },
+        claimsHistory: [
+            {date: 'Aug 12, 2025', service: 'Physiotherapy Session', amount: '£85.00', status: 'Approved & Paid'},
+            {date: 'May 20, 2025', service: 'Specialist Consultation', amount: '£250.00', status: 'Approved & Paid'},
+        ],
         billingInfo: {nextPayment: {amount: '', dueDate: '', paymentMethod: ''}, paymentHistory: []},
         documents: [],
-        vehicleInfo: {vehicle: '', year: '', registrationNo: '', vin: '', primaryDriver: '', address: ''}
+    },
+    {
+        icon: <StyledPetIcon/>,
+        title: appTexts.petPolicyTitle,
+        identifier: 'Buddy (Golden Retriever)',
+        policyNumber: 'VIV-PET-APP-73519',
+        status: 'warning',
+        coverages: [],
+        detailedCoverages: [],
+        applicationStatus: {
+            steps: [
+                {name: 'Application Submitted', status: 'completed'},
+                {name: 'Underwriting Review', status: 'inProgress'},
+                {name: 'Policy Decision', status: 'pending'},
+                {name: 'Policy Active', status: 'pending'},
+            ],
+            note: 'Your application is currently with our underwriting team. This typically takes 3-5 working days. We will notify you by email as soon as there is an update.',
+        },
+        documents: [
+            {name: 'Buddy - Vet History Report.pdf', date: 'Uploaded Oct 3, 2025'},
+            {name: 'Buddy - Microchip Certificate.pdf', date: 'Uploaded Oct 3, 2025'},
+        ],
+        billingInfo: {nextPayment: {amount: '', dueDate: '', paymentMethod: ''}, paymentHistory: []},
     },
 ];
 
@@ -166,6 +266,14 @@ export const PoliciesSection = ({onViewDetails}: PoliciesSectionProps) => {
                         onViewDetails={onViewDetails}
                     />
                 ))}
+                <UpsellCard href="/products/life-insurance">
+                    <UpsellIconWrapper>
+                        <StyledLifeIcon/>
+                    </UpsellIconWrapper>
+                    <Text as="h3" $variant="h3" style={{marginBottom: 8}}>{appTexts.lifeUpsellTitle}</Text>
+                    <Text $variant="body">{appTexts.lifeUpsellBody}</Text>
+                    <FullWidthButton>{appTexts.getQuoteButton}</FullWidthButton>
+                </UpsellCard>
             </CardsGrid>
         </SectionContainer>
     );

@@ -7,7 +7,7 @@ import {CloseIcon} from './icons/CloseIcon';
 import {PrimaryButton, SecondaryButton} from './Button';
 import {DocumentIcon} from './icons/DocumentIcon';
 
-type Tab = 'coverage' | 'billing' | 'vehicle';
+type Tab = 'coverage' | 'billing' | 'vehicle' | 'member' | 'claims' | 'status' | 'documents';
 
 interface SidePanelProps {
     isOpen: boolean;
@@ -97,6 +97,7 @@ const TabButton = styled.button<{ $isActive: boolean }>`
     color: ${({theme}) => theme.colors.textBody};
     font-weight: ${({theme, $isActive}) => ($isActive ? theme.font.weights.semiBold : theme.font.weights.regular)};
     position: relative;
+    white-space: nowrap;
 
     &::after {
         content: '';
@@ -164,6 +165,24 @@ const PanelFooter = styled.footer`
     justify-content: flex-end;
 `;
 
+const StatusTracker = styled.ul`
+    list-style: none;
+    padding: 0;
+    margin: 0;
+`;
+
+const StatusStep = styled.li<{ $status: 'completed' | 'inProgress' | 'pending' }>`
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 16px;
+
+    &:last-child {
+        padding-bottom: 0;
+    }
+`;
+
+
 export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
     const [activeTab, setActiveTab] = useState<Tab>('coverage');
 
@@ -182,11 +201,39 @@ export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
 
     useEffect(() => {
         if (isOpen) {
-            setActiveTab('coverage');
+            if (policy?.title === appTexts.petPolicyTitle) {
+                setActiveTab('status');
+            } else {
+                setActiveTab('coverage');
+            }
         }
-    }, [isOpen]);
+    }, [isOpen, policy]);
 
     if (!policy) return null;
+
+    const getTabsForPolicy = () => {
+        switch (policy.title) {
+            case appTexts.autoPolicyTitle:
+                return [
+                    {key: 'coverage', label: appTexts.tabCoverage},
+                    {key: 'billing', label: appTexts.tabBilling},
+                    {key: 'vehicle', label: appTexts.tabVehicle},
+                ];
+            case appTexts.healthPolicyTitle:
+                return [
+                    {key: 'coverage', label: appTexts.tabCoverage},
+                    {key: 'member', label: appTexts.tabMember},
+                    {key: 'claims', label: appTexts.tabClaims},
+                ];
+            case appTexts.petPolicyTitle:
+                return [
+                    {key: 'status', label: appTexts.tabStatus},
+                    {key: 'documents', label: appTexts.tabDocuments},
+                ];
+            default:
+                return [];
+        }
+    };
 
     const renderTabContent = () => {
         switch (activeTab) {
@@ -212,16 +259,19 @@ export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
                             <ContentList>
                                 <ContentListItem>
                                     <Text $variant="body">{appTexts.paymentAmount}</Text>
+                                    <DottedLine/>
                                     <Text $variant="body"
                                           style={{fontWeight: 500}}>{policy.billingInfo.nextPayment.amount}</Text>
                                 </ContentListItem>
                                 <ContentListItem>
                                     <Text $variant="body">{appTexts.paymentDueDate}</Text>
+                                    <DottedLine/>
                                     <Text $variant="body"
                                           style={{fontWeight: 500}}>{policy.billingInfo.nextPayment.dueDate}</Text>
                                 </ContentListItem>
                                 <ContentListItem>
                                     <Text $variant="body">{appTexts.paymentMethod}</Text>
+                                    <DottedLine/>
                                     <Text $variant="body"
                                           style={{fontWeight: 500}}>{policy.billingInfo.nextPayment.paymentMethod}</Text>
                                 </ContentListItem>
@@ -233,6 +283,7 @@ export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
                                 {policy.billingInfo.paymentHistory.map((item, index) => (
                                     <ContentListItem key={index}>
                                         <Text $variant="body">{item.date}</Text>
+                                        <DottedLine/>
                                         <Text $variant="body" style={{fontWeight: 500}}>{item.amount}</Text>
                                     </ContentListItem>
                                 ))}
@@ -260,35 +311,114 @@ export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
                         <ContentList>
                             <ContentListItem>
                                 <Text $variant="body">Vehicle</Text>
+                                <DottedLine/>
                                 <Text $variant="body"
-                                      style={{fontWeight: 500}}>{policy.vehicleInfo.vehicle}</Text>
+                                      style={{fontWeight: 500}}>{policy.vehicleInfo?.vehicle}</Text>
                             </ContentListItem>
                             <ContentListItem>
                                 <Text $variant="body">Year</Text>
-                                <Text $variant="body"
-                                      style={{fontWeight: 500}}>{policy.vehicleInfo.year}</Text>
+                                <DottedLine/>
+                                <Text $variant="body" style={{fontWeight: 500}}>{policy.vehicleInfo?.year}</Text>
                             </ContentListItem>
                             <ContentListItem>
                                 <Text $variant="body">Registration No</Text>
+                                <DottedLine/>
                                 <Text $variant="body"
-                                      style={{fontWeight: 500}}>{policy.vehicleInfo.registrationNo}</Text>
+                                      style={{fontWeight: 500}}>{policy.vehicleInfo?.registrationNo}</Text>
                             </ContentListItem>
                             <ContentListItem>
                                 <Text $variant="body">VIN</Text>
-                                <Text $variant="body" style={{fontWeight: 500}}>{policy.vehicleInfo.vin}</Text>
+                                <DottedLine/>
+                                <Text $variant="body" style={{fontWeight: 500}}>{policy.vehicleInfo?.vin}</Text>
                             </ContentListItem>
                             <ContentListItem>
                                 <Text $variant="body">Primary Driver</Text>
+                                <DottedLine/>
                                 <Text $variant="body"
-                                      style={{fontWeight: 500}}>{policy.vehicleInfo.primaryDriver}</Text>
+                                      style={{fontWeight: 500}}>{policy.vehicleInfo?.primaryDriver}</Text>
                             </ContentListItem>
                             <ContentListItem>
                                 <Text $variant="body">Address</Text>
+                                <DottedLine/>
                                 <Text $variant="body" style={{
                                     fontWeight: 500,
                                     textAlign: 'right'
-                                }}>{policy.vehicleInfo.address}</Text>
+                                }}>{policy.vehicleInfo?.address}</Text>
                             </ContentListItem>
+                        </ContentList>
+                    </ContentSection>
+                );
+            case 'member':
+                return (
+                    <ContentSection>
+                        <ContentList>
+                            <ContentListItem>
+                                <Text $variant="body">Member Name</Text>
+                                <DottedLine/>
+                                <Text $variant="body"
+                                      style={{fontWeight: 500}}>{policy.memberInfo?.name}</Text>
+                            </ContentListItem>
+                            <ContentListItem>
+                                <Text $variant="body">Membership No</Text>
+                                <DottedLine/>
+                                <Text $variant="body"
+                                      style={{fontWeight: 500}}>{policy.memberInfo?.membershipNo}</Text>
+                            </ContentListItem>
+                            <ContentListItem>
+                                <Text $variant="body">Date of Birth</Text>
+                                <DottedLine/>
+                                <Text $variant="body" style={{fontWeight: 500}}>{policy.memberInfo?.dob}</Text>
+                            </ContentListItem>
+                            <ContentListItem>
+                                <Text $variant="body">Primary Care Physician</Text>
+                                <DottedLine/>
+                                <Text $variant="body" style={{fontWeight: 500}}>{policy.memberInfo?.pcp}</Text>
+                            </ContentListItem>
+                        </ContentList>
+                    </ContentSection>
+                );
+            case 'claims':
+                return (
+                    <ContentSection>
+                        <ContentList>
+                            {policy.claimsHistory?.map((claim, index) => (
+                                <ContentListItem key={index}>
+                                    <div>
+                                        <Text $variant="body" style={{fontWeight: 500}}>{claim.service}</Text>
+                                        <Text $variant="caption">{claim.date}</Text>
+                                    </div>
+                                    <Text $variant="body" style={{fontWeight: 500}}>{claim.amount}</Text>
+                                </ContentListItem>
+                            ))}
+                        </ContentList>
+                    </ContentSection>
+                );
+            case 'status':
+                return (
+                    <ContentSection>
+                        <StatusTracker>
+                            {policy.applicationStatus?.steps.map(step => (
+                                <StatusStep key={step.name} $status={step.status}>
+                                    <Text>{step.name}</Text>
+                                </StatusStep>
+                            ))}
+                        </StatusTracker>
+                        <Text as="p" $variant="caption">{policy.applicationStatus?.note}</Text>
+                    </ContentSection>
+                );
+            case 'documents':
+                return (
+                    <ContentSection>
+                        <ContentList>
+                            {policy.documents.map((doc, index) => (
+                                <DocumentItem key={index}>
+                                    <DocumentIcon/>
+                                    <div>
+                                        <Text $variant="body" style={{fontWeight: 500}}>{doc.name}</Text>
+                                        <Text $variant="caption">{doc.date}</Text>
+                                    </div>
+                                </DocumentItem>
+                            ))}
                         </ContentList>
                     </ContentSection>
                 );
@@ -302,7 +432,8 @@ export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
             <Overlay $isOpen={isOpen} onClick={onClose}/>
             <PanelContainer $isOpen={isOpen}>
                 <PanelHeader>
-                    <Text as="h2" $variant="h2">{`${policy.title}${appTexts.panelTitleSuffix}`}</Text>
+                    <Text as="h2"
+                          $variant="h2">{`${policy.title}${appTexts.panelTitleSuffix}`}</Text>
                     <CloseButton onClick={onClose} aria-label="Close details panel">
                         <CloseIcon/>
                     </CloseButton>
@@ -311,26 +442,32 @@ export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
                 <KeyInfoSection>
                     <Text as="p" $variant="h3" style={{fontWeight: 600}}>{policy.identifier}</Text>
                     <Text as="p" $variant="caption"
-                          style={{marginTop: 4}}>{`${appTexts.policyNumberPrefix}${policy.policyNumber}`}</Text>
+                          style={{marginTop: 4}}>{`${policy.status === 'warning' ? appTexts.applicationNumberPrefix : appTexts.policyNumberPrefix}${policy.policyNumber}`}</Text>
                 </KeyInfoSection>
 
                 <TabContainer>
-                    <TabButton $isActive={activeTab === 'coverage'} onClick={() => setActiveTab('coverage')}>
-                        {appTexts.tabCoverage}
-                    </TabButton>
-                    <TabButton $isActive={activeTab === 'billing'} onClick={() => setActiveTab('billing')}>
-                        {appTexts.tabBilling}
-                    </TabButton>
-                    <TabButton $isActive={activeTab === 'vehicle'} onClick={() => setActiveTab('vehicle')}>
-                        {appTexts.tabVehicle}
-                    </TabButton>
+                    {getTabsForPolicy().map(tab => (
+                        <TabButton
+                            key={tab.key}
+                            $isActive={activeTab === tab.key}
+                            onClick={() => setActiveTab(tab.key as Tab)}
+                        >
+                            {tab.label}
+                        </TabButton>
+                    ))}
                 </TabContainer>
 
                 <PanelContent>{renderTabContent()}</PanelContent>
 
                 <PanelFooter>
-                    <SecondaryButton>{appTexts.downloadIdCardButton}</SecondaryButton>
-                    <PrimaryButton>{appTexts.makePaymentButton}</PrimaryButton>
+                    {policy.title === appTexts.petPolicyTitle ? (
+                        <PrimaryButton>{appTexts.uploadDocumentsButton}</PrimaryButton>
+                    ) : (
+                        <>
+                            <SecondaryButton>{appTexts.downloadIdCardButton}</SecondaryButton>
+                            <PrimaryButton>{appTexts.makePaymentButton}</PrimaryButton>
+                        </>
+                    )}
                 </PanelFooter>
             </PanelContainer>
         </>
