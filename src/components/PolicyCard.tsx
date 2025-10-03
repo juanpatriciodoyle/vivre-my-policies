@@ -120,12 +120,13 @@ interface PolicyCardProps {
 
 const statusTextMap: Record<PolicyStatus, string> = {
     active: appTexts.statusActive,
-    warning: appTexts.statusAtRisk,
+    warning: appTexts.statusPending,
     error: appTexts.statusLapsed,
 };
 
 export const PolicyCard = ({policy, onViewDetails}: PolicyCardProps) => {
     const {icon, title, identifier, policyNumber, status, coverages} = policy;
+    const buttonText = status === 'warning' ? appTexts.checkStatusButton : appTexts.viewDetailsButton;
 
     return (
         <CardContainer>
@@ -143,7 +144,8 @@ export const PolicyCard = ({policy, onViewDetails}: PolicyCardProps) => {
 
             <CardBody>
                 <PolicyIdentifier as="p" $variant="body">{identifier}</PolicyIdentifier>
-                <PolicyNumber as="p" $variant="caption">{`${appTexts.policyNumberPrefix}${policyNumber}`}</PolicyNumber>
+                <PolicyNumber as="p"
+                              $variant="caption">{`${status === 'warning' ? appTexts.applicationNumberPrefix : appTexts.policyNumberPrefix}${policyNumber}`}</PolicyNumber>
 
                 {coverages && coverages.length > 0 && (
                     <CoverageModule>
@@ -164,10 +166,10 @@ export const PolicyCard = ({policy, onViewDetails}: PolicyCardProps) => {
 
             <CardFooter>
                 {status === 'warning' ? (
-                    <PrimaryButton>{appTexts.payNowButton}</PrimaryButton>
+                    <PrimaryButton onClick={() => onViewDetails(policy)}>{buttonText}</PrimaryButton>
                 ) : (
                     <SecondaryButton onClick={() => onViewDetails(policy)}>
-                        {appTexts.viewDetailsButton}
+                        {buttonText}
                     </SecondaryButton>
                 )}
             </CardFooter>
