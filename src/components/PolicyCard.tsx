@@ -1,8 +1,9 @@
-import styled, {css, keyframes} from 'styled-components';
+import styled, {css} from 'styled-components';
 import {appTexts} from '../constants/text';
 import {PrimaryButton, SecondaryButton} from './Button';
 import Text from './Text';
 import {CoverageItem} from './CoverageItem';
+import {PolicyData} from './PoliciesSection';
 
 export type PolicyStatus = 'active' | 'warning' | 'error';
 
@@ -15,21 +16,6 @@ export interface Coverage {
 interface StatusBadgeProps {
     $status: PolicyStatus;
 }
-
-interface CardContainerProps {
-    $animationDelay: number;
-}
-
-const fadeInUp = keyframes`
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-`;
 
 const statusStyles = {
     active: css`
@@ -46,7 +32,7 @@ const statusStyles = {
     `,
 };
 
-const CardContainer = styled.div<CardContainerProps>`
+const CardContainer = styled.div`
     box-sizing: border-box;
     background-color: ${({theme}) => theme.colors.subtleBackground};
     padding: 24px;
@@ -55,9 +41,6 @@ const CardContainer = styled.div<CardContainerProps>`
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
-    opacity: 0;
-    animation: ${fadeInUp} 500ms ease-out forwards;
-    animation-delay: ${({$animationDelay}) => $animationDelay}ms;
     transition: transform 300ms ease, box-shadow 300ms ease, border-color 300ms ease;
 
     &:hover {
@@ -127,13 +110,8 @@ const CardFooter = styled.div`
 `;
 
 interface PolicyCardProps {
-    icon: React.ReactNode;
-    title: string;
-    identifier: string;
-    policyNumber: string;
-    status: PolicyStatus;
-    coverages?: Coverage[];
-    animationDelay: number;
+    policy: PolicyData;
+    onViewDetails: (policy: PolicyData) => void;
 }
 
 const statusTextMap: Record<PolicyStatus, string> = {
@@ -142,17 +120,11 @@ const statusTextMap: Record<PolicyStatus, string> = {
     error: appTexts.statusLapsed,
 };
 
-export const PolicyCard = ({
-                               icon,
-                               title,
-                               identifier,
-                               policyNumber,
-                               status,
-                               coverages,
-                               animationDelay,
-                           }: PolicyCardProps) => {
+export const PolicyCard = ({policy, onViewDetails}: PolicyCardProps) => {
+    const {icon, title, identifier, policyNumber, status, coverages} = policy;
+
     return (
-        <CardContainer $animationDelay={animationDelay}>
+        <CardContainer>
             <CardHeader>
                 <PolicyInfo>
                     {icon}
@@ -190,7 +162,9 @@ export const PolicyCard = ({
                 {status === 'warning' ? (
                     <PrimaryButton>{appTexts.payNowButton}</PrimaryButton>
                 ) : (
-                    <SecondaryButton>{appTexts.viewDetailsButton}</SecondaryButton>
+                    <SecondaryButton onClick={() => onViewDetails(policy)}>
+                        {appTexts.viewDetailsButton}
+                    </SecondaryButton>
                 )}
             </CardFooter>
         </CardContainer>

@@ -28,4 +28,9 @@ export const appTexts = {
     coverageCollision: 'Collision Coverage',
     premiumAmountPrefix: 'Premium:',
     nextPaymentDuePrefix: 'Next Payment:',
+    panelTitleSuffix: ' Details',
+    tabCoverage: 'Coverage Details',
+    tabBilling: 'Billing & Documents',
+    tabVehicle: 'Vehicle Information',
+    downloadIdCardButton: 'Download ID Card',
 };
