@@ -8,7 +8,6 @@ const StyledHubContainer = styled.main`
     width: 100%;
     min-height: 100vh;
     margin: 0 auto;
-    max-width: 960px;
     padding: 40px 24px;
     gap: 56px;
     background-color: ${({theme}) => theme.colors.background};
