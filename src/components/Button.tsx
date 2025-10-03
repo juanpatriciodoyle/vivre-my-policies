@@ -17,3 +17,13 @@ export const PrimaryButton = styled.button`
         background-color: ${({theme}) => theme.colors.primaryHover};
     }
 `;
+
+export const SecondaryButton = styled(PrimaryButton)`
+    background-color: #FFFFFF;
+    color: ${({theme}) => theme.colors.primary};
+    border: 1px solid ${({theme}) => theme.colors.borders};
+
+    &:hover {
+        background-color: ${({theme}) => theme.colors.primaryTint};
+    }
+`;

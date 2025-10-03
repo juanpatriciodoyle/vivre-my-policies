@@ -1,6 +1,6 @@
 import styled, {css, keyframes} from 'styled-components';
 import {appTexts} from '../constants/text';
-import {PrimaryButton} from './Button';
+import {PrimaryButton, SecondaryButton} from './Button';
 import Text from './Text';
 import {CoverageItem} from './CoverageItem';
 
@@ -31,15 +31,6 @@ const fadeInUp = keyframes`
     }
 `;
 
-const pulse = keyframes`
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.15);
-    }
-`;
-
 const statusStyles = {
     active: css`
         background-color: ${({theme}) => theme.colors.successTint};
@@ -47,7 +38,7 @@ const statusStyles = {
     `,
     warning: css`
         background-color: ${({theme}) => theme.colors.warningTint};
-        color: ${({theme}) => theme.colors.warning};
+        color: #000000;
     `,
     error: css`
         background-color: ${({theme}) => theme.colors.errorTint};
@@ -98,26 +89,12 @@ const StatusBadge = styled.div<StatusBadgeProps>`
     ${({$status}) => statusStyles[$status]};
 `;
 
-const StatusDot = styled.div<StatusBadgeProps>`
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: currentColor;
-    animation: ${({$status}) =>
-            $status === 'active'
-                    ? css`
-                        ${pulse} 2s ease-in-out infinite
-                    `
-                    : 'none'};
-`;
-
 const CardBody = styled.div`
     flex-grow: 1;
-    padding-left: 36px;
 `;
 
 const PolicyIdentifier = styled(Text)`
-    font-weight: ${({theme}) => theme.font.weights.semiBold};
+    font-weight: ${({theme}) => theme.font.weights.bold};
     color: ${({theme}) => theme.colors.textHeadings};
 `;
 
@@ -182,7 +159,6 @@ export const PolicyCard = ({
                     <Text as="h3" $variant="h3">{title}</Text>
                 </PolicyInfo>
                 <StatusBadge $status={status}>
-                    <StatusDot $status={status}/>
                     <Text as="span" $variant="caption" style={{fontWeight: 500}}>
                         {statusTextMap[status]}
                     </Text>
@@ -211,7 +187,11 @@ export const PolicyCard = ({
             </CardBody>
 
             <CardFooter>
-                <PrimaryButton>{appTexts.viewDetailsButton}</PrimaryButton>
+                {status === 'warning' ? (
+                    <PrimaryButton>{appTexts.payNowButton}</PrimaryButton>
+                ) : (
+                    <SecondaryButton>{appTexts.viewDetailsButton}</SecondaryButton>
+                )}
             </CardFooter>
         </CardContainer>
     );

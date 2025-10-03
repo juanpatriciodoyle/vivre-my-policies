@@ -15,8 +15,9 @@ export const appTexts = {
     policyIdentifierHome: '123 Meadow Lane',
     policyNumberPrefix: 'Policy No. ',
     viewDetailsButton: 'View Details',
+    payNowButton: 'Pay Now',
     statusActive: 'Active',
-    statusAtRisk: 'At Risk',
+    statusAtRisk: 'Payment Due',
     statusLapsed: 'Lapsed',
     toolFileClaim: 'File a Claim',
     toolRoadsideAssistance: 'Get Roadside Assistance',
@@ -25,4 +26,6 @@ export const appTexts = {
     coverageBodilyInjury: 'Bodily Injury Liability',
     coveragePropertyDamage: 'Property Damage Liability',
     coverageCollision: 'Collision Coverage',
+    premiumAmountPrefix: 'Premium:',
+    nextPaymentDuePrefix: 'Next Payment:',
 };

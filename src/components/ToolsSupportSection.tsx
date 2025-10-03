@@ -17,31 +17,33 @@ const SectionTitle = styled(Text)`
     margin-bottom: 20px;
 `;
 
-const List = styled.ul`
-    list-style: none;
-    padding: 0;
-    margin: 0;
-`;
+const ToolsGrid = styled.div`
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
 
-const ListItem = styled.li`
-    &:not(:last-child) {
-        border-bottom: 1px solid ${({theme}) => theme.colors.borders};
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(3, 1fr);
     }
 `;
 
-const ListItemLink = styled.a`
+const ToolCard = styled.a`
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 8px;
-    margin: 0 -8px;
-    border-radius: 6px;
+    padding: 24px;
+    background-color: ${({theme}) => theme.colors.subtleBackground};
+    border-radius: ${({theme}) => theme.sizing.borderRadius.cards};
+    border: 1px solid ${({theme}) => theme.colors.borders};
     text-decoration: none;
     color: inherit;
-    transition: background-color 150ms ease;
+    transition: all 150ms ease;
 
     &:hover {
-        background-color: ${({theme}) => theme.colors.secondaryAction};
+        transform: translateY(-5px);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+        border-color: ${({theme}) => theme.colors.primary};
     }
 `;
 
@@ -71,23 +73,21 @@ export const ToolsSupportSection = () => {
             <SectionTitle as="h2" $variant="h2">
                 {appTexts.toolsSectionTitle}
             </SectionTitle>
-            <List>
+            <ToolsGrid>
                 {tools.map((tool) => (
-                    <ListItem key={tool.label}>
-                        <ListItemLink href="#">
-                            <LabelContainer>
-                                <IconWrapper>{tool.icon}</IconWrapper>
-                                <Text $variant="body" style={{fontWeight: 500}}>
-                                    {tool.label}
-                                </Text>
-                            </LabelContainer>
-                            <ChevronWrapper>
-                                <ChevronRightIcon/>
-                            </ChevronWrapper>
-                        </ListItemLink>
-                    </ListItem>
+                    <ToolCard key={tool.label} href="#">
+                        <LabelContainer>
+                            <IconWrapper>{tool.icon}</IconWrapper>
+                            <Text $variant="body" style={{fontWeight: 500}}>
+                                {tool.label}
+                            </Text>
+                        </LabelContainer>
+                        <ChevronWrapper>
+                            <ChevronRightIcon/>
+                        </ChevronWrapper>
+                    </ToolCard>
                 ))}
-            </List>
+            </ToolsGrid>
         </SectionContainer>
     );
 };
