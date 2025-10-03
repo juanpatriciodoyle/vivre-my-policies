@@ -7,7 +7,7 @@ import {CloseIcon} from './icons/CloseIcon';
 import {PrimaryButton, SecondaryButton} from './Button';
 import {DocumentIcon} from './icons/DocumentIcon';
 
-type Tab = 'coverage' | 'billing' | 'vehicle' | 'member' | 'claims' | 'status' | 'documents';
+type Tab = 'coverage' | 'billing' | 'vehicle' | 'member' | 'claims' | 'status' | 'documents' | 'property';
 
 interface SidePanelProps {
     isOpen: boolean;
@@ -230,6 +230,12 @@ export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
                     {key: 'status', label: appTexts.tabStatus},
                     {key: 'documents', label: appTexts.tabDocuments},
                 ];
+            case appTexts.homePolicyTitle:
+                return [
+                    {key: 'coverage', label: appTexts.tabCoverage},
+                    {key: 'billing', label: appTexts.tabBilling},
+                    {key: 'property', label: appTexts.tabProperty},
+                ];
             default:
                 return [];
         }
@@ -344,6 +350,45 @@ export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
                                     fontWeight: 500,
                                     textAlign: 'right'
                                 }}>{policy.vehicleInfo?.address}</Text>
+                            </ContentListItem>
+                        </ContentList>
+                    </ContentSection>
+                );
+            case 'property':
+                return (
+                    <ContentSection>
+                        <ContentList>
+                            <ContentListItem>
+                                <Text $variant="body">Address</Text>
+                                <DottedLine/>
+                                <Text $variant="body"
+                                      style={{
+                                          fontWeight: 500,
+                                          textAlign: 'right'
+                                      }}>{policy.propertyInfo?.address}</Text>
+                            </ContentListItem>
+                            <ContentListItem>
+                                <Text $variant="body">Property Type</Text>
+                                <DottedLine/>
+                                <Text $variant="body"
+                                      style={{fontWeight: 500}}>{policy.propertyInfo?.propertyType}</Text>
+                            </ContentListItem>
+                            <ContentListItem>
+                                <Text $variant="body">Year Built</Text>
+                                <DottedLine/>
+                                <Text $variant="body"
+                                      style={{fontWeight: 500}}>{policy.propertyInfo?.yearBuilt}</Text>
+                            </ContentListItem>
+                            <ContentListItem>
+                                <Text $variant="body">Occupancy</Text>
+                                <DottedLine/>
+                                <Text $variant="body" style={{fontWeight: 500}}>{policy.propertyInfo?.occupancy}</Text>
+                            </ContentListItem>
+                            <ContentListItem>
+                                <Text $variant="body">Listed Building Status</Text>
+                                <DottedLine/>
+                                <Text $variant="body"
+                                      style={{fontWeight: 500}}>{policy.propertyInfo?.listedStatus}</Text>
                             </ContentListItem>
                         </ContentList>
                     </ContentSection>

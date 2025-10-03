@@ -58,6 +58,13 @@ export interface PolicyData {
         primaryDriver: string;
         address: string;
     };
+    propertyInfo?: {
+        address: string;
+        propertyType: string;
+        yearBuilt: string;
+        occupancy: string;
+        listedStatus: string;
+    };
     memberInfo?: {
         name: string;
         membershipNo: string;
@@ -254,17 +261,46 @@ const allPolicies: { [key: string]: PolicyData } = {
     home: {
         icon: <StyledHouseIcon/>,
         title: appTexts.homePolicyTitle,
-        identifier: appTexts.policyIdentifierHome,
-        policyNumber: 'VIV-2938475',
+        identifier: '10 Downing Street, London',
+        policyNumber: 'VIV-HOM-551982',
         status: 'active',
         coverages: [
-            {label: 'Dwelling Coverage', value: '$450,000', percentage: 85},
-            {label: 'Personal Property', value: '$225,000', percentage: 60},
-            {label: 'Liability Coverage', value: '$500,000', percentage: 100},
+            {label: 'Buildings Cover', value: '£2,000,000', percentage: 100},
+            {label: 'Contents Cover', value: '£150,000', percentage: 75},
+            {label: 'Personal Belongings', value: '£10,000', percentage: 50},
         ],
-        detailedCoverages: [],
-        billingInfo: {nextPayment: {amount: '', dueDate: '', paymentMethod: ''}, paymentHistory: []},
-        documents: [],
+        detailedCoverages: [
+            {label: 'Buildings Cover', value: '£2,000,000'},
+            {label: 'Contents Cover', value: '£150,000'},
+            {label: 'Personal Belongings', value: '£10,000'},
+            {label: 'Accidental Damage', value: 'Included'},
+            {label: 'Legal Expenses', value: '£100,000 Limit'},
+            {label: 'Standard Excess', value: '£500'},
+        ],
+        billingInfo: {
+            nextPayment: {
+                amount: '£65.00',
+                dueDate: 'November 1, 2025',
+                paymentMethod: 'Visa ending in 4242',
+            },
+            paymentHistory: [
+                {date: 'Oct 1, 2025', amount: '£65.00', status: 'Paid'},
+                {date: 'Sep 1, 2025', amount: '£65.00', status: 'Paid'},
+                {date: 'Aug 1, 2025', amount: '£65.00', status: 'Paid'},
+            ],
+        },
+        documents: [
+            {name: 'Home Insurance Policy Schedule.pdf', date: 'Oct 1, 2025'},
+            {name: 'Insurance Product Information Document (IPID).pdf', date: 'Oct 1, 2025'},
+            {name: 'Policy Wording - Vivre Home Plus.pdf', date: 'Oct 1, 2025'},
+        ],
+        propertyInfo: {
+            address: '10 Downing Street, London, SW1A 2AA, United Kingdom',
+            propertyType: 'Terraced House',
+            yearBuilt: 'c. 1735',
+            occupancy: 'Primary Residence',
+            listedStatus: 'Grade I',
+        },
     }
 }
 
