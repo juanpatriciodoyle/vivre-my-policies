@@ -5,6 +5,7 @@ import Text from './Text';
 import {appTexts} from '../constants/text';
 import {CloseIcon} from './icons/CloseIcon';
 import {PrimaryButton, SecondaryButton} from './Button';
+import {DocumentIcon} from './icons/DocumentIcon';
 
 type Tab = 'coverage' | 'billing' | 'vehicle';
 
@@ -114,9 +115,18 @@ const PanelContent = styled.div`
     flex-grow: 1;
     overflow-y: auto;
     padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
 `;
 
-const CoverageList = styled.ul`
+const ContentSection = styled.section`
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+`;
+
+const ContentList = styled.ul`
     list-style: none;
     padding: 0;
     margin: 0;
@@ -125,9 +135,10 @@ const CoverageList = styled.ul`
     gap: 16px;
 `;
 
-const CoverageListItem = styled.li`
+const ContentListItem = styled.li`
     display: flex;
     align-items: baseline;
+    justify-content: space-between;
 `;
 
 const DottedLine = styled.div`
@@ -135,6 +146,12 @@ const DottedLine = styled.div`
     border-bottom: 1px dotted ${({theme}) => theme.colors.borders};
     margin: 0 8px;
     transform: translateY(-4px);
+`;
+
+const DocumentItem = styled.li`
+    display: flex;
+    align-items: center;
+    gap: 12px;
 `;
 
 const PanelFooter = styled.footer`
@@ -175,20 +192,106 @@ export const DetailsSidePanel = ({isOpen, onClose, policy}: SidePanelProps) => {
         switch (activeTab) {
             case 'coverage':
                 return (
-                    <CoverageList>
-                        {policy.coverages?.map(cov => (
-                            <CoverageListItem key={cov.label}>
-                                <Text $variant="body">{cov.label}</Text>
-                                <DottedLine/>
-                                <Text $variant="body" style={{fontWeight: 500}}>{cov.value}</Text>
-                            </CoverageListItem>
-                        ))}
-                    </CoverageList>
+                    <ContentSection>
+                        <ContentList>
+                            {policy.detailedCoverages?.map(cov => (
+                                <ContentListItem key={cov.label}>
+                                    <Text $variant="body">{cov.label}</Text>
+                                    <DottedLine/>
+                                    <Text $variant="body" style={{fontWeight: 500}}>{cov.value}</Text>
+                                </ContentListItem>
+                            ))}
+                        </ContentList>
+                    </ContentSection>
                 );
             case 'billing':
-                return <Text>Billing & Documents content goes here.</Text>;
+                return (
+                    <>
+                        <ContentSection>
+                            <Text as="h4" $variant="h3">{appTexts.nextPaymentSectionTitle}</Text>
+                            <ContentList>
+                                <ContentListItem>
+                                    <Text $variant="body">{appTexts.paymentAmount}</Text>
+                                    <Text $variant="body"
+                                          style={{fontWeight: 500}}>{policy.billingInfo.nextPayment.amount}</Text>
+                                </ContentListItem>
+                                <ContentListItem>
+                                    <Text $variant="body">{appTexts.paymentDueDate}</Text>
+                                    <Text $variant="body"
+                                          style={{fontWeight: 500}}>{policy.billingInfo.nextPayment.dueDate}</Text>
+                                </ContentListItem>
+                                <ContentListItem>
+                                    <Text $variant="body">{appTexts.paymentMethod}</Text>
+                                    <Text $variant="body"
+                                          style={{fontWeight: 500}}>{policy.billingInfo.nextPayment.paymentMethod}</Text>
+                                </ContentListItem>
+                            </ContentList>
+                        </ContentSection>
+                        <ContentSection>
+                            <Text as="h4" $variant="h3">{appTexts.paymentHistorySectionTitle}</Text>
+                            <ContentList>
+                                {policy.billingInfo.paymentHistory.map((item, index) => (
+                                    <ContentListItem key={index}>
+                                        <Text $variant="body">{item.date}</Text>
+                                        <Text $variant="body" style={{fontWeight: 500}}>{item.amount}</Text>
+                                    </ContentListItem>
+                                ))}
+                            </ContentList>
+                        </ContentSection>
+                        <ContentSection>
+                            <Text as="h4" $variant="h3">{appTexts.documentsSectionTitle}</Text>
+                            <ContentList>
+                                {policy.documents.map((doc, index) => (
+                                    <DocumentItem key={index}>
+                                        <DocumentIcon/>
+                                        <div>
+                                            <Text $variant="body" style={{fontWeight: 500}}>{doc.name}</Text>
+                                            <Text $variant="caption">{doc.date}</Text>
+                                        </div>
+                                    </DocumentItem>
+                                ))}
+                            </ContentList>
+                        </ContentSection>
+                    </>
+                );
             case 'vehicle':
-                return <Text>Vehicle Information content goes here.</Text>;
+                return (
+                    <ContentSection>
+                        <ContentList>
+                            <ContentListItem>
+                                <Text $variant="body">Vehicle</Text>
+                                <Text $variant="body"
+                                      style={{fontWeight: 500}}>{policy.vehicleInfo.vehicle}</Text>
+                            </ContentListItem>
+                            <ContentListItem>
+                                <Text $variant="body">Year</Text>
+                                <Text $variant="body"
+                                      style={{fontWeight: 500}}>{policy.vehicleInfo.year}</Text>
+                            </ContentListItem>
+                            <ContentListItem>
+                                <Text $variant="body">Registration No</Text>
+                                <Text $variant="body"
+                                      style={{fontWeight: 500}}>{policy.vehicleInfo.registrationNo}</Text>
+                            </ContentListItem>
+                            <ContentListItem>
+                                <Text $variant="body">VIN</Text>
+                                <Text $variant="body" style={{fontWeight: 500}}>{policy.vehicleInfo.vin}</Text>
+                            </ContentListItem>
+                            <ContentListItem>
+                                <Text $variant="body">Primary Driver</Text>
+                                <Text $variant="body"
+                                      style={{fontWeight: 500}}>{policy.vehicleInfo.primaryDriver}</Text>
+                            </ContentListItem>
+                            <ContentListItem>
+                                <Text $variant="body">Address</Text>
+                                <Text $variant="body" style={{
+                                    fontWeight: 500,
+                                    textAlign: 'right'
+                                }}>{policy.vehicleInfo.address}</Text>
+                            </ContentListItem>
+                        </ContentList>
+                    </ContentSection>
+                );
             default:
                 return null;
         }
