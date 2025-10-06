@@ -123,7 +123,6 @@ const CardsGrid = styled.div`
 
 const UpsellCard = styled.a`
     box-sizing: border-box;
-    background-color: #FFFFFF;
     padding: 24px;
     border-radius: ${({theme}) => theme.sizing.borderRadius.cards};
     border: 1px dashed ${({theme}) => theme.colors.borders};
