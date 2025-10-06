@@ -1,6 +1,6 @@
 # My Policies Dashboard 👤
 
-![Days](https://img.shields.io/static/v1?label=Working-Days&message=1&color=blue)
+![Days](https://img.shields.io/static/v1?label=Working-Days&message=2&color=blue)
 ![Status](https://img.shields.io/static/v1?label=Done-Status&message=100%&color=green)
 
 This project is a modern insurance profile dashboard built with React, TypeScript, and styled-components. It provides a dynamic and user-friendly interface for customers to view and manage their insurance policies, with a focus on clean code, reusability, and a developer-friendly setup for HCL DX integration. ✨
