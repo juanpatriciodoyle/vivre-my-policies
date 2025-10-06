@@ -6,7 +6,6 @@ const StyledHubContainer = styled.main`
     display: flex;
     flex-direction: column;
     width: 100%;
-    min-height: 100vh;
     margin: 0 auto;
     padding: 40px 24px;
     gap: 56px;
