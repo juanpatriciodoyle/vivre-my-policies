@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {HubContainer} from './components/HubContainer';
-import {ActiveCoverageHeader} from './components/ActiveCoverageHeader';
 import {PoliciesSection, PolicyData} from './components/PoliciesSection';
 import {ToolsSupportSection} from './components/ToolsSupportSection';
 import {DetailsSidePanel} from './components/DetailsSidePanel';
@@ -29,10 +28,7 @@ function App() {
     return (
         <>
             <HubContainer>
-                <ActiveCoverageHeader
-                    isLocalhost={isLocalhost}
-                />
-                <PoliciesSection onViewDetails={handleViewDetails} product={settings.product}/>
+                <PoliciesSection onViewDetails={handleViewDetails} product={settings.product} isLocalhost={isLocalhost}/>
                 <ToolsSupportSection/>
             </HubContainer>
             <DetailsSidePanel

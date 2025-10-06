@@ -1,5 +1,5 @@
 import styled, {keyframes} from 'styled-components';
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import {appTexts} from '../constants/text';
 import Text from './Text';
 import {PolicyCard, PolicyStatus} from './PolicyCard';
@@ -11,6 +11,8 @@ import {PrimaryButton} from './Button';
 import {HouseIcon} from './icons/HouseIcon';
 import {Product} from '../utils/dx/types';
 import {getRelativeDate} from '../utils/dateUtils';
+import SettingsButton from "../utils/dx/SettingsButton";
+import SettingsModal from "../utils/dx/SettingsModal";
 
 interface Coverage {
     label: string;
@@ -94,9 +96,15 @@ const SectionContainer = styled.section`
     width: 100%;
 `;
 
+const SectionHeader = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+`;
+
 const SectionTitle = styled(Text)`
     align-self: flex-start;
-    margin-bottom: 20px;
 `;
 
 const CardsGrid = styled.div`
@@ -337,9 +345,12 @@ export const allPolicies: { [key: string]: PolicyData } = {
 interface PoliciesSectionProps {
     onViewDetails: (policy: PolicyData) => void;
     product: Product;
+    isLocalhost: boolean;
 }
 
-export const PoliciesSection = ({onViewDetails, product}: PoliciesSectionProps) => {
+export const PoliciesSection = ({onViewDetails, product, isLocalhost}: PoliciesSectionProps) => {
+    const [isModalOpen, setModalOpen] = useState(false);
+
     const policiesToDisplay = useMemo(() => {
         if (product === 'Health') {
             return [allPolicies.health, allPolicies.home, allPolicies.pet];
@@ -349,9 +360,17 @@ export const PoliciesSection = ({onViewDetails, product}: PoliciesSectionProps) 
 
     return (
         <SectionContainer>
-            <SectionTitle as="h2" $variant="h2">
-                {appTexts.policiesSectionTitle}
-            </SectionTitle>
+            <SectionHeader>
+                <SectionTitle as="h2" $variant="h2">
+                    {appTexts.policiesSectionTitle}
+                </SectionTitle>
+                <SettingsButton
+                    isLocalhost={isLocalhost}
+                    onClick={() => setModalOpen(true)}
+                    isActive={isModalOpen}
+                />
+            </SectionHeader>
+            <SettingsModal isOpen={isModalOpen} onClose={() => setModalOpen(false)}/>
             <CardsGrid>
                 {policiesToDisplay.map((policy) => (
                     <PolicyCard
