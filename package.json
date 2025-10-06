@@ -1,5 +1,5 @@
 {
-  "name": "vivre-my-profile",
+  "name": "vivre-my-policies",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -36,7 +36,7 @@
   },
   "config": {
     "dxclient": {
-      "wcmContentName": "My Profile",
+      "wcmContentName": "My Policies",
       "wcmSiteArea": "Script Application Library/Script Portlet Applications",
       "mainHtmlFile": "index.html",
       "contentRoot": "./build",

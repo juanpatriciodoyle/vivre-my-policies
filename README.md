@@ -1,4 +1,4 @@
-# My Profile Dashboard 👤
+# My Policies Dashboard 👤
 
 ![Days](https://img.shields.io/static/v1?label=Working-Days&message=1&color=blue)
 ![Status](https://img.shields.io/static/v1?label=Done-Status&message=100%&color=green)
@@ -95,7 +95,7 @@ Here is a step-by-step guide to all the changes required to introduce a new sett
 },
 "config": {
     "dxclient": {
-      "wcmContentName": "My Profile",
+      "wcmContentName": "My Policies",
       "wcmSiteArea": "Script Application Library/Script Portlet Applications",
       "mainHtmlFile": "index.html",
       "contentRoot": "./build",
