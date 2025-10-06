@@ -28,11 +28,6 @@ function App() {
         window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
     );
 
-    const userId = window.appConfig?.userUid || 'default-user-id';
-    const userName = window.appConfig?.userCn || 'default-user-name';
-    const userLocation = (window.appConfig?.userLocation || '[default-user-location]').replace(/[[\]]/g, '');
-
-
     const {nextPaymentAmount, nextPaymentDate} = useMemo(() => {
         const activePolicies = Object.values(allPolicies).filter(p => p.status === 'active');
         const total = activePolicies.reduce((sum, p) => sum + p.billingInfo.nextPayment.amount, 0);
