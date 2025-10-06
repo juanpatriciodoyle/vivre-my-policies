@@ -15,6 +15,12 @@
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png"/>
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json"/>
     <title>My Profile</title>
+    <script>
+        window.appConfig = {
+            userUid: '[Plugin:EvaluateEL value="${wp.user.uid}"]',
+            userCn: '[Plugin:EvaluateEL value="${wp.user.cn}"]',
+        };
+    </script>
 </head>
 <body>
 <div id="__SPNS__root"></div>
