@@ -37,7 +37,7 @@
   "config": {
     "dxclient": {
       "wcmContentName": "My Policies",
-      "wcmSiteArea": "Script Application Library/Script Portlet Applications",
+      "wcmSiteArea": "Vivre Design/Applications",
       "mainHtmlFile": "index.html",
       "contentRoot": "./build",
       "protocol": "https",
