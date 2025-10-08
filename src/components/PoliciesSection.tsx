@@ -87,7 +87,6 @@ export interface PolicyData {
         }[],
         note: string;
     };
-    isBlurred?: boolean;
 }
 
 
@@ -346,47 +345,17 @@ interface PoliciesSectionProps {
     onViewDetails: (policy: PolicyData) => void;
     product: Product;
     isLocalhost: boolean;
-    userId: string;
 }
 
-export const PoliciesSection = ({onViewDetails, product, isLocalhost, userId}: PoliciesSectionProps) => {
+export const PoliciesSection = ({onViewDetails, product, isLocalhost}: PoliciesSectionProps) => {
     const [isModalOpen, setModalOpen] = useState(false);
 
     const policiesToDisplay = useMemo(() => {
-        const basePolicies = product === 'Health'
-            ? [allPolicies.health, allPolicies.home, allPolicies.pet]
-            : [allPolicies.auto, allPolicies.health, allPolicies.pet];
-
-        if (userId === 'wpsadmin') {
-            return basePolicies.map(policy => {
-                const newPolicy = {...policy, isBlurred: true};
-
-                switch (policy.title) {
-                    case appTexts.autoPolicyTitle:
-                        newPolicy.identifier = '•••• ••••';
-                        newPolicy.policyNumber = 'VIV-*******';
-                        break;
-                    case appTexts.healthPolicyTitle:
-                        newPolicy.identifier = '•••• ••••••••';
-                        newPolicy.policyNumber = 'VIV-HLT-******';
-                        break;
-                    case appTexts.homePolicyTitle:
-                        newPolicy.identifier = '•••••••••••••••••••••';
-                        newPolicy.policyNumber = 'VIV-HOM-******';
-                        break;
-                    case appTexts.petPolicyTitle:
-                        newPolicy.identifier = '••••• (•••••• •••••••••)';
-                        newPolicy.policyNumber = 'VIV-PET-APP-*****';
-                        break;
-                    default:
-                        break;
-                }
-                return newPolicy;
-            });
+        if (product === 'Health') {
+            return [allPolicies.health, allPolicies.home, allPolicies.pet];
         }
-
-        return basePolicies;
-    }, [product, userId]);
+        return [allPolicies.auto, allPolicies.health, allPolicies.pet];
+    }, [product]);
 
     return (
         <SectionContainer>
