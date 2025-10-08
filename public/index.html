@@ -15,6 +15,11 @@
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/vivre/Logo.png"/>
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json"/>
     <title>My Policies</title>
+    <script>
+        window.appConfig = {
+            userUid: '[Plugin:EvaluateEL value="${wp.user.uid}"]',
+        };
+    </script>
 </head>
 <body>
 <div id="__SPNS__root"></div>
