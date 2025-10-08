@@ -10,7 +10,7 @@ function App() {
     const [selectedPolicy, setSelectedPolicy] = useState<PolicyData | null>(null);
     const {settings} = useSettings();
 
-    const userId = window.appConfig?.userUid || 'VIV-ACCOUNT-1';
+    const userId = window.__SPNS__appConfig?.userUid || 'VIV-ACCOUNT-1';
 
     const handleViewDetails = (policy: PolicyData) => {
         setSelectedPolicy(policy);

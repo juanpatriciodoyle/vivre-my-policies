@@ -2,10 +2,8 @@ export { };
 
 declare global {
     interface Window {
-        appConfig?: {
+        __SPNS__appConfig?: {
             userUid: string;
-            userCn: string;
-            userLocation: string;
         };
     }
 }
