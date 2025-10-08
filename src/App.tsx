@@ -10,6 +10,8 @@ function App() {
     const [selectedPolicy, setSelectedPolicy] = useState<PolicyData | null>(null);
     const {settings} = useSettings();
 
+    const userId = window.appConfig?.userUid || 'VIV-ACCOUNT-1';
+
     const handleViewDetails = (policy: PolicyData) => {
         setSelectedPolicy(policy);
         setPanelOpen(true);
@@ -28,7 +30,8 @@ function App() {
     return (
         <>
             <HubContainer>
-                <PoliciesSection onViewDetails={handleViewDetails} product={settings.product} isLocalhost={isLocalhost}/>
+                <PoliciesSection onViewDetails={handleViewDetails} product={settings.product} isLocalhost={isLocalhost}
+                                 userId={userId}/>
                 <ToolsSupportSection/>
             </HubContainer>
             <DetailsSidePanel

@@ -80,13 +80,29 @@ const CardBody = styled.div`
     flex-grow: 1;
 `;
 
-const PolicyIdentifier = styled(Text)`
+const PolicyIdentifier = styled(Text)<{ $isBlurred?: boolean }>`
     font-weight: ${({theme}) => theme.font.weights.bold};
     color: ${({theme}) => theme.colors.textHeadings};
+    transition: filter 0.3s ease-in-out;
+    ${({$isBlurred}) =>
+            $isBlurred &&
+            css`
+                filter: blur(4px);
+                pointer-events: none;
+                user-select: none;
+            `}
 `;
 
-const PolicyNumber = styled(Text)`
+const PolicyNumber = styled(Text)<{ $isBlurred?: boolean }>`
     margin-top: 4px;
+    transition: filter 0.3s ease-in-out;
+    ${({$isBlurred}) =>
+            $isBlurred &&
+            css`
+                filter: blur(4px);
+                pointer-events: none;
+                user-select: none;
+            `}
 `;
 
 const CoverageModule = styled.div`
@@ -125,7 +141,7 @@ const statusTextMap: Record<PolicyStatus, string> = {
 };
 
 export const PolicyCard = ({policy, onViewDetails}: PolicyCardProps) => {
-    const {icon, title, identifier, policyNumber, status, coverages} = policy;
+    const {icon, title, identifier, policyNumber, status, coverages, isBlurred} = policy;
     const buttonText = status === 'warning' ? appTexts.checkStatusButton : appTexts.viewDetailsButton;
 
     return (
@@ -143,9 +159,10 @@ export const PolicyCard = ({policy, onViewDetails}: PolicyCardProps) => {
             </CardHeader>
 
             <CardBody>
-                <PolicyIdentifier as="p" $variant="body">{identifier}</PolicyIdentifier>
+                <PolicyIdentifier as="p" $variant="body" $isBlurred={isBlurred}>{identifier}</PolicyIdentifier>
                 <PolicyNumber as="p"
-                              $variant="caption">{`${status === 'warning' ? appTexts.applicationNumberPrefix : appTexts.policyNumberPrefix}${policyNumber}`}</PolicyNumber>
+                              $variant="caption"
+                              $isBlurred={isBlurred}>{`${status === 'warning' ? appTexts.applicationNumberPrefix : appTexts.policyNumberPrefix}${policyNumber}`}</PolicyNumber>
 
                 {coverages && coverages.length > 0 && (
                     <CoverageModule>
