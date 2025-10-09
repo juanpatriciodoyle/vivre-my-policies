@@ -10,7 +10,7 @@ function App() {
     const [selectedPolicy, setSelectedPolicy] = useState<PolicyData | null>(null);
     const {settings} = useSettings();
 
-    const userId = window.__SPNS__appConfig?.userUid || 'VIV-ACCOUNT-1';
+    const isEditor = (window.__SPNS__appConfig?.isEditor || 'false') === 'true'
 
     const handleViewDetails = (policy: PolicyData) => {
         setSelectedPolicy(policy);
@@ -31,7 +31,7 @@ function App() {
         <>
             <HubContainer>
                 <PoliciesSection onViewDetails={handleViewDetails} product={settings.product} isLocalhost={isLocalhost}
-                                 userId={userId}/>
+                                 isEditor={isEditor}/>
                 <ToolsSupportSection/>
             </HubContainer>
             <DetailsSidePanel

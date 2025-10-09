@@ -17,7 +17,7 @@
     <title>My Policies</title>
     <script>
         window.__SPNS__appConfig = {
-            userUid: '[Plugin:EvaluateEL value="${wp.user.uid}"]',
+            isEditor: '[Plugin:EvaluateEL value=\'${wp.ac[wp.selectionModel.selected].hasPermission[&quot;EDITOR&quot;]}\']',
         };
     </script>
 </head>

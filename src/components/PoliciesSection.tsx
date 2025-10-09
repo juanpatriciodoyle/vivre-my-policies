@@ -346,10 +346,10 @@ interface PoliciesSectionProps {
     onViewDetails: (policy: PolicyData) => void;
     product: Product;
     isLocalhost: boolean;
-    userId: string;
+    isEditor: boolean;
 }
 
-export const PoliciesSection = ({onViewDetails, product, isLocalhost, userId}: PoliciesSectionProps) => {
+export const PoliciesSection = ({onViewDetails, product, isLocalhost, isEditor}: PoliciesSectionProps) => {
     const [isModalOpen, setModalOpen] = useState(false);
 
     const policiesToDisplay = useMemo(() => {
@@ -357,7 +357,7 @@ export const PoliciesSection = ({onViewDetails, product, isLocalhost, userId}: P
             ? [allPolicies.health, allPolicies.home, allPolicies.pet]
             : [allPolicies.auto, allPolicies.health, allPolicies.pet];
 
-        if (userId === 'wpsadmin') {
+        if (isEditor) {
             return basePolicies.map(policy => {
                 const newPolicy = {...policy, isBlurred: true};
 
@@ -386,7 +386,7 @@ export const PoliciesSection = ({onViewDetails, product, isLocalhost, userId}: P
         }
 
         return basePolicies;
-    }, [product, userId]);
+    }, [product, isEditor]);
 
     return (
         <SectionContainer>
